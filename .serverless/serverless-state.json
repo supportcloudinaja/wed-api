@@ -1,16 +1,17 @@
 {
   "service": {
-    "service": "wedding-app",
+    "service": "restapi",
     "serviceObject": {
-      "name": "wedding-app"
+      "name": "restapi"
     },
     "provider": {
       "stage": "dev",
       "variableSyntax": "\\${([^{}]+?)}",
       "name": "aws",
       "runtime": "nodejs12.x",
-      "region": "us-east-1",
       "memorySize": 128,
+      "timeout": 10,
+      "region": "us-east-1",
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -70,10 +71,34 @@
               }
             }
           },
-          "AppLogGroup": {
+          "CreateLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/wedding-app-dev-app"
+              "LogGroupName": "/aws/lambda/restapi-dev-create"
+            }
+          },
+          "GetOneLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/restapi-dev-getOne"
+            }
+          },
+          "GetAllLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/restapi-dev-getAll"
+            }
+          },
+          "UpdateLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/restapi-dev-update"
+            }
+          },
+          "DeleteLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/restapi-dev-delete"
             }
           },
           "IamRoleLambdaExecution": {
@@ -101,7 +126,7 @@
                     "Fn::Join": [
                       "-",
                       [
-                        "wedding-app",
+                        "restapi",
                         "dev",
                         "lambda"
                       ]
@@ -118,7 +143,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/wedding-app-dev*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/restapi-dev*:*"
                           }
                         ]
                       },
@@ -129,7 +154,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/wedding-app-dev*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/restapi-dev*:*:*"
                           }
                         ]
                       }
@@ -142,7 +167,7 @@
                 "Fn::Join": [
                   "-",
                   [
-                    "wedding-app",
+                    "restapi",
                     "dev",
                     {
                       "Ref": "AWS::Region"
@@ -153,17 +178,17 @@
               }
             }
           },
-          "AppLambdaFunction": {
+          "CreateLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/wedding-app/dev/1597851432620-2020-08-19T15:37:12.620Z/wedding-app.zip"
+                "S3Key": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z/restapi.zip"
               },
-              "FunctionName": "wedding-app-dev-app",
-              "Handler": "app/app.handler",
+              "FunctionName": "restapi-dev-create",
+              "Handler": "handler.create",
               "MemorySize": 128,
               "Role": {
                 "Fn::GetAtt": [
@@ -172,26 +197,166 @@
                 ]
               },
               "Runtime": "nodejs12.x",
-              "Timeout": 6
+              "Timeout": 10
             },
             "DependsOn": [
-              "AppLogGroup"
+              "CreateLogGroup"
             ]
           },
-          "AppLambdaVersionUnnjycZ2mQ24uf6d2R35Di83js19jox7JDZ5iLH0": {
+          "CreateLambdaVersionVAztIE88rv2eHpiuKvdmaWRkFVNNH2xFeDF7KYve8Y": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "AppLambdaFunction"
+                "Ref": "CreateLambdaFunction"
               },
-              "CodeSha256": "cj4+Ar8Q0aUCp32RiS98eRPbVXbb7T9uDdIlQOnIot4="
+              "CodeSha256": "SmhYMiAL5Hk3VT5kOJQjOQCtiEC31eRPgLxWnNICFL0="
+            }
+          },
+          "GetOneLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z/restapi.zip"
+              },
+              "FunctionName": "restapi-dev-getOne",
+              "Handler": "handler.getOne",
+              "MemorySize": 128,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs12.x",
+              "Timeout": 10
+            },
+            "DependsOn": [
+              "GetOneLogGroup"
+            ]
+          },
+          "GetOneLambdaVersionSMzLzjGlXNtP856tVLcntmIt3ul1FUVdfm2Uo4663B0": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetOneLambdaFunction"
+              },
+              "CodeSha256": "SmhYMiAL5Hk3VT5kOJQjOQCtiEC31eRPgLxWnNICFL0="
+            }
+          },
+          "GetAllLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z/restapi.zip"
+              },
+              "FunctionName": "restapi-dev-getAll",
+              "Handler": "handler.getAll",
+              "MemorySize": 128,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs12.x",
+              "Timeout": 10
+            },
+            "DependsOn": [
+              "GetAllLogGroup"
+            ]
+          },
+          "GetAllLambdaVersionQIPxIlRKWbpEPsxC48QQv8sbcoMgoepVUTYztz5QpZA": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetAllLambdaFunction"
+              },
+              "CodeSha256": "SmhYMiAL5Hk3VT5kOJQjOQCtiEC31eRPgLxWnNICFL0="
+            }
+          },
+          "UpdateLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z/restapi.zip"
+              },
+              "FunctionName": "restapi-dev-update",
+              "Handler": "handler.update",
+              "MemorySize": 128,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs12.x",
+              "Timeout": 10
+            },
+            "DependsOn": [
+              "UpdateLogGroup"
+            ]
+          },
+          "UpdateLambdaVersionJvJpjPwMB2VmUAM87TlqNdXDiXVD0cNqmo4JB8BFw": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "UpdateLambdaFunction"
+              },
+              "CodeSha256": "SmhYMiAL5Hk3VT5kOJQjOQCtiEC31eRPgLxWnNICFL0="
+            }
+          },
+          "DeleteLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z/restapi.zip"
+              },
+              "FunctionName": "restapi-dev-delete",
+              "Handler": "handler.delete",
+              "MemorySize": 128,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs12.x",
+              "Timeout": 10
+            },
+            "DependsOn": [
+              "DeleteLogGroup"
+            ]
+          },
+          "DeleteLambdaVersionVWDBLWZ10xlGvFwoEfwsN3mHcbBBoqtXU6Sv7EN3M": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "DeleteLambdaFunction"
+              },
+              "CodeSha256": "SmhYMiAL5Hk3VT5kOJQjOQCtiEC31eRPgLxWnNICFL0="
             }
           },
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "dev-wedding-app",
+              "Name": "dev-restapi",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -200,7 +365,7 @@
               "Policy": ""
             }
           },
-          "ApiGatewayResourceProxyVar": {
+          "ApiGatewayResourceApi": {
             "Type": "AWS::ApiGateway::Resource",
             "Properties": {
               "ParentId": {
@@ -209,13 +374,49 @@
                   "RootResourceId"
                 ]
               },
-              "PathPart": "{proxy+}",
+              "PathPart": "api",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
             }
           },
-          "ApiGatewayMethodOptions": {
+          "ApiGatewayResourceApiWedding": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceApi"
+              },
+              "PathPart": "wedding",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceApiWeddingUsers": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceApiWedding"
+              },
+              "PathPart": "users",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceApiWeddingUsersIdVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceApiWeddingUsers"
+              },
+              "PathPart": "{id}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodApiWeddingUsersOptions": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
               "AuthorizationType": "NONE",
@@ -244,7 +445,7 @@
                     "ResponseParameters": {
                       "method.response.header.Access-Control-Allow-Origin": "'*'",
                       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'"
                     },
                     "ResponseTemplates": {
                       "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".+\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
@@ -253,17 +454,14 @@
                 ]
               },
               "ResourceId": {
-                "Fn::GetAtt": [
-                  "ApiGatewayRestApi",
-                  "RootResourceId"
-                ]
+                "Ref": "ApiGatewayResourceApiWeddingUsers"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
             }
           },
-          "ApiGatewayMethodProxyVarOptions": {
+          "ApiGatewayMethodApiWeddingUsersIdVarOptions": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
               "AuthorizationType": "NONE",
@@ -292,7 +490,7 @@
                     "ResponseParameters": {
                       "method.response.header.Access-Control-Allow-Origin": "'*'",
                       "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,PUT,GET'"
                     },
                     "ResponseTemplates": {
                       "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".+\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
@@ -301,23 +499,20 @@
                 ]
               },
               "ResourceId": {
-                "Ref": "ApiGatewayResourceProxyVar"
+                "Ref": "ApiGatewayResourceApiWeddingUsersIdVar"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
             }
           },
-          "ApiGatewayMethodAny": {
+          "ApiGatewayMethodApiWeddingUsersPost": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "ANY",
+              "HttpMethod": "POST",
               "RequestParameters": {},
               "ResourceId": {
-                "Fn::GetAtt": [
-                  "ApiGatewayRestApi",
-                  "RootResourceId"
-                ]
+                "Ref": "ApiGatewayResourceApiWeddingUsers"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -342,7 +537,7 @@
                       ":lambda:path/2015-03-31/functions/",
                       {
                         "Fn::GetAtt": [
-                          "AppLambdaFunction",
+                          "CreateLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -354,13 +549,13 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayMethodProxyVarAny": {
+          "ApiGatewayMethodApiWeddingUsersIdVarGet": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "ANY",
+              "HttpMethod": "GET",
               "RequestParameters": {},
               "ResourceId": {
-                "Ref": "ApiGatewayResourceProxyVar"
+                "Ref": "ApiGatewayResourceApiWeddingUsersIdVar"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -385,7 +580,7 @@
                       ":lambda:path/2015-03-31/functions/",
                       {
                         "Fn::GetAtt": [
-                          "AppLambdaFunction",
+                          "GetOneLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -397,7 +592,136 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1597851429226": {
+          "ApiGatewayMethodApiWeddingUsersGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceApiWeddingUsers"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetAllLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodApiWeddingUsersIdVarPut": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "PUT",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceApiWeddingUsersIdVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "UpdateLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayMethodApiWeddingUsersIdVarDelete": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "DELETE",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceApiWeddingUsersIdVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "DeleteLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1597929688793": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -406,18 +730,169 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodOptions",
-              "ApiGatewayMethodProxyVarOptions",
-              "ApiGatewayMethodAny",
-              "ApiGatewayMethodProxyVarAny"
+              "ApiGatewayMethodApiWeddingUsersOptions",
+              "ApiGatewayMethodApiWeddingUsersIdVarOptions",
+              "ApiGatewayMethodApiWeddingUsersPost",
+              "ApiGatewayMethodApiWeddingUsersIdVarGet",
+              "ApiGatewayMethodApiWeddingUsersGet",
+              "ApiGatewayMethodApiWeddingUsersIdVarPut",
+              "ApiGatewayMethodApiWeddingUsersIdVarDelete"
             ]
           },
-          "AppLambdaPermissionApiGateway": {
+          "CreateLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
               "FunctionName": {
                 "Fn::GetAtt": [
-                  "AppLambdaFunction",
+                  "CreateLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetOneLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetOneLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetAllLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetAllLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "UpdateLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "UpdateLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "DeleteLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "DeleteLambdaFunction",
                   "Arn"
                 ]
               },
@@ -456,10 +931,34 @@
               "Ref": "ServerlessDeploymentBucket"
             }
           },
-          "AppLambdaFunctionQualifiedArn": {
+          "CreateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionUnnjycZ2mQ24uf6d2R35Di83js19jox7JDZ5iLH0"
+              "Ref": "CreateLambdaVersionVAztIE88rv2eHpiuKvdmaWRkFVNNH2xFeDF7KYve8Y"
+            }
+          },
+          "GetOneLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetOneLambdaVersionSMzLzjGlXNtP856tVLcntmIt3ul1FUVdfm2Uo4663B0"
+            }
+          },
+          "GetAllLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetAllLambdaVersionQIPxIlRKWbpEPsxC48QQv8sbcoMgoepVUTYztz5QpZA"
+            }
+          },
+          "UpdateLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "UpdateLambdaVersionJvJpjPwMB2VmUAM87TlqNdXDiXVD0cNqmo4JB8BFw"
+            }
+          },
+          "DeleteLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "DeleteLambdaVersionVWDBLWZ10xlGvFwoEfwsN3mHcbBBoqtXU6Sv7EN3M"
             }
           },
           "ServiceEndpoint": {
@@ -556,15 +1055,18 @@
       },
       "vpc": {}
     },
+    "plugins": [
+      "serverless-offline"
+    ],
     "pluginsData": {},
     "functions": {
-      "app": {
-        "handler": "app/app.handler",
+      "create": {
+        "handler": "handler.create",
         "events": [
           {
             "http": {
-              "path": "",
-              "method": "any",
+              "path": "api/wedding/users",
+              "method": "post",
               "cors": {
                 "origins": [
                   "*"
@@ -572,33 +1074,7 @@
                 "origin": "*",
                 "methods": [
                   "OPTIONS",
-                  "ANY"
-                ],
-                "headers": [
-                  "Content-Type",
-                  "X-Amz-Date",
-                  "Authorization",
-                  "X-Api-Key",
-                  "X-Amz-Security-Token",
-                  "X-Amz-User-Agent"
-                ],
-                "allowCredentials": false
-              },
-              "integration": "AWS_PROXY"
-            }
-          },
-          {
-            "http": {
-              "path": "{proxy+}",
-              "method": "any",
-              "cors": {
-                "origins": [
-                  "*"
-                ],
-                "origin": "*",
-                "methods": [
-                  "OPTIONS",
-                  "ANY"
+                  "POST"
                 ],
                 "headers": [
                   "Content-Type",
@@ -614,13 +1090,165 @@
             }
           }
         ],
-        "name": "wedding-app-dev-app",
+        "name": "restapi-dev-create",
         "package": {},
         "memory": 128,
-        "timeout": 6,
+        "timeout": 10,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionUnnjycZ2mQ24uf6d2R35Di83js19jox7JDZ5iLH0"
+        "versionLogicalId": "CreateLambdaVersionVAztIE88rv2eHpiuKvdmaWRkFVNNH2xFeDF7KYve8Y"
+      },
+      "getOne": {
+        "handler": "handler.getOne",
+        "events": [
+          {
+            "http": {
+              "path": "api/wedding/users/{id}",
+              "method": "get",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "restapi-dev-getOne",
+        "package": {},
+        "memory": 128,
+        "timeout": 10,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetOneLambdaVersionSMzLzjGlXNtP856tVLcntmIt3ul1FUVdfm2Uo4663B0"
+      },
+      "getAll": {
+        "handler": "handler.getAll",
+        "events": [
+          {
+            "http": {
+              "path": "api/wedding/users",
+              "method": "get",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "restapi-dev-getAll",
+        "package": {},
+        "memory": 128,
+        "timeout": 10,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetAllLambdaVersionQIPxIlRKWbpEPsxC48QQv8sbcoMgoepVUTYztz5QpZA"
+      },
+      "update": {
+        "handler": "handler.update",
+        "events": [
+          {
+            "http": {
+              "path": "api/wedding/users/{id}",
+              "method": "put",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "PUT"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "restapi-dev-update",
+        "package": {},
+        "memory": 128,
+        "timeout": 10,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "UpdateLambdaVersionJvJpjPwMB2VmUAM87TlqNdXDiXVD0cNqmo4JB8BFw"
+      },
+      "delete": {
+        "handler": "handler.delete",
+        "events": [
+          {
+            "http": {
+              "path": "api/wedding/users/{id}",
+              "method": "delete",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "DELETE"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "restapi-dev-delete",
+        "package": {},
+        "memory": 128,
+        "timeout": 10,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "DeleteLambdaVersionVWDBLWZ10xlGvFwoEfwsN3mHcbBBoqtXU6Sv7EN3M"
       }
     },
     "configValidationMode": "warn",
@@ -636,9 +1264,12 @@
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
       },
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
       "package": {
-        "artifact": "F:\\proj-wedding\\wed-api\\.serverless\\wedding-app.zip",
-        "artifactDirectoryName": "serverless/wedding-app/dev/1597851432620-2020-08-19T15:37:12.620Z"
+        "artifact": "F:\\drax\\restapi\\.serverless\\restapi.zip",
+        "artifactDirectoryName": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z"
       },
       "layers": {
         "$ref": "$[\"service\"][\"layers\"]"
@@ -646,10 +1277,10 @@
       "configValidationMode": "warn"
     },
     "isDashboardMonitoringPreconfigured": false,
-    "artifact": "F:\\proj-wedding\\wed-api\\.serverless\\wedding-app.zip"
+    "artifact": "F:\\drax\\restapi\\.serverless\\restapi.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/wedding-app/dev/1597851432620-2020-08-19T15:37:12.620Z",
-    "artifact": "wedding-app.zip"
+    "artifactDirectoryName": "serverless/restapi/dev/1597929692805-2020-08-20T13:21:32.805Z",
+    "artifact": "restapi.zip"
   }
 }

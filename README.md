@@ -1,2 +1,0 @@
-# wed-api
-wedding API
