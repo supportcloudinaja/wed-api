@@ -20,6 +20,7 @@ phases:
       # - echo Installing npm vue-cli, express and serverless
       # - npm install -g @vue/cli
       - npm install -g serverless
+      - npm install -g serverless-offline
       - echo "Copy Variables.ENV from s3bucket"
       - aws s3 cp s3://cloudinaja-cicd/wed/api/variables.env .
       - ls | grep variables.env
